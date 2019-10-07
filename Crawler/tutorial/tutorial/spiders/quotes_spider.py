@@ -7,21 +7,22 @@ class QuotesSpider(scrapy.Spider):
     name = "quotes"
 
     start_urls = [
-        'https://www.prozis.com/es/es/alimentacion-saludable/barritas-y-snacks-para-llevar/muffins']
+        'https://www.myprotein.es/nutrition/protein/whey-protein.list']
     
 
     rules = [
         Rule(LinkExtractor(allow=(),
-            restrict_xpaths=('//a[@class="w-100 h-100 m-0 p-0"]/@href')
+                           restrict_xpaths=(
+                               '//a[@class="athenaProductBlock_linkImage"]/@href')
         ) ,callback="parse_item" ),
 
     ]
 
     def parse(self, response):
-        baseUrl = "https://www.prozis.com/es/es/prozis/"
+        baseUrl = "https://www.myprotein.es/"
 
         urls = response.xpath(
-            "//a[re:test(@class, 'w-100 h-100 m-0 p-0')]/@href").extract()
+            "//a[re:test(@class, 'athenaProductBlock_linkImage')]/@href").extract()
         
         for f in urls:
             new_url = baseUrl + f
