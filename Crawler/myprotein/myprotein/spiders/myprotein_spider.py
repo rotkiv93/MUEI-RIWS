@@ -1,6 +1,7 @@
 import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
+from myprotein.items import CrawlerItem
 import json
 import os
 import time
@@ -33,7 +34,9 @@ class MyProteinSpider(scrapy.Spider):
 
     # Funcion que parsea el articulo concreto y lo guarda en un archivo JSON
     def parse_item(self, response):
-        item = {}
+        item = CrawlerItem()
+        item["idProduct"] = response.xpath(
+            "//div[@class='athenaProductReviews' and @id='athenaProductReviewsComponent']/@data-product-id").extract_first()
         item["nombreProducto"] = response.xpath("//h1[@class='productName_title']/text()").extract_first()
         item["precio"] = response.xpath(
             "//span[@class='productPrice_schema' and @data-schema='price']/text()").extract_first()
@@ -53,7 +56,7 @@ class MyProteinSpider(scrapy.Spider):
             "//table[@class='nutritional-info-table'][1]/tbody/tr").getall())
 
         # Diccionario donde se almacenará la informacion nutricional
-        infNutricional = {}
+        infNutricional = []
 
         #Itera sobre la tabla de informacion nutricional
         for i in range(len(table_rows)):
@@ -80,17 +83,21 @@ class MyProteinSpider(scrapy.Spider):
                     
                     # Solo se guardará el dato si existe en la tabla
                     if (element_data is not None):
-                        # self.log("cabecera: %s - %s - %s" % (element_title, element_quantity, element_data))
-                        header = str(element_title) + " " + str(element_quantity)
-                        infNutricional[header] = str(element_data)
-            
+                        info_element = {
+                            "percentage": str(element_quantity),
+                            "title": str(element_title),
+                            "value": str(element_data) 
+                        }
+                        infNutricional.append(info_element)
+                        
         item["infNutricional"] = infNutricional
+        yield item
 
         # Guardamos los datos en un JSON para cada articulo
-        page = response.url.split("/")[-2]
-        filename = 'articles-%s.json' % page
-        with open(filename, 'w', encoding='utf8') as f:
-            json.dump(item, f, ensure_ascii=False)
-        self.log('Saved file %s' % filename)
+        # page = response.url.split("/")[-2]
+        # filename = 'articles-%s.json' % page
+        # with open(filename, 'w', encoding='utf8') as f:
+        #     json.dump(item, f, ensure_ascii=False)
+        # self.log('Saved file %s' % filename)
 
     

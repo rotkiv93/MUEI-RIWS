@@ -9,10 +9,10 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'crawler'
+BOT_NAME = 'myprotein'
 
-SPIDER_MODULES = ['crawler.spiders']
-NEWSPIDER_MODULE = 'crawler.spiders'
+SPIDER_MODULES = ['myprotein.spiders']
+NEWSPIDER_MODULE = 'myprotein.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -20,6 +20,16 @@ NEWSPIDER_MODULE = 'crawler.spiders'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
+
+# ITEM_PIPELINES = {
+#     'scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500
+# }
+
+# ELASTICSEARCH_SERVERS = ['elastic']
+# ELASTICSEARCH_INDEX = 'myprotein'
+# ELASTICSEARCH_TYPE = 'items'
+# ELASTICSEARCH_UNIQ_KEY = 'nombreProducto'  # Custom unique key
+
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
