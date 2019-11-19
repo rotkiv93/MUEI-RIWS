@@ -1,49 +1,22 @@
-import HTTP from "../../../common/http-common";
+import HTTP from "@/common/http-common";
+import queryParser from "@/common/queryParser";
 
 const getEntities = context => {
-  HTTP.get("entities/cars")
+  HTTP.get("?q=age:45")
     .then(response => {
-      context.commit("CARS_FETCHED", response.data.content);
+      console.log(response);
+      //context.commit("PRODUCTS_FETCHED", response.data.content);
     })
     .catch(error => {
       throw error;
     });
 };
 
-const getEntityWithId = function(context, id) {
-  HTTP.get("entities/cars/" + id)
+const getEntityWithFilter = function(context, filters) {
+  HTTP.get("?q=" + queryParser(filters))
     .then(response => {
-      context.commit("CAR_FETCHED", response.data);
-    })
-    .catch(error => {
-      throw error;
-    });
-};
-
-const deleteEntity = function(context, id) {
-  HTTP.delete("entities/cars/" + id)
-    .then(() => {
-      context.commit("CAR_DELETED", id);
-    })
-    .catch(error => {
-      throw error;
-    });
-};
-
-const addEntity = function(context, payload) {
-  HTTP.post("entities/cars", payload)
-    .then(response => {
-      context.commit("CAR_ADDED", response);
-    })
-    .catch(error => {
-      throw error;
-    });
-};
-
-const updateEntity = function(context, payload) {
-  HTTP.put("entities/cars/" + payload.id, payload)
-    .then(response => {
-      context.commit("CAR_UPDATED", response);
+      console.log(response);
+      //context.commit("PRODUCTS_FETCHED", response.data);
     })
     .catch(error => {
       throw error;
@@ -52,8 +25,5 @@ const updateEntity = function(context, payload) {
 
 export default {
   getEntities,
-  getEntityWithId,
-  deleteEntity,
-  addEntity,
-  updateEntity
+  getEntityWithFilter
 };

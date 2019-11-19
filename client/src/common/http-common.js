@@ -1,8 +1,17 @@
 import Vue from "vue";
 import axios from "axios";
 
+// RANGOS SON :
+//count:[1 TO 5]
+/**
+ * 
+ * Dates before 2012
+ * date:{* TO 2012-01-01}
+ https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
+ */
+
 const HTTP = axios.create({
-  baseURL: "http://localhost:8080/api/"
+  baseURL: "http://localhost:9200/company/_search"
 });
 
 const onUnauthorized = () => {

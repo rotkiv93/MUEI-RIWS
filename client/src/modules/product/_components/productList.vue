@@ -84,7 +84,6 @@ export default {
           valoracion: 5
         }
       ],
-
       selectedItem: null,
       showDialog: false
     };
