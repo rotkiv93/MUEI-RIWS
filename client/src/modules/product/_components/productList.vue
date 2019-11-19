@@ -1,59 +1,63 @@
 <template>
   <v-container flex>
     <!-- ACCIONES -->
-    <v-row class="herramientas" justify="center" align="end">
-      <v-col cols="12" sm="4" lg="4">
-        <v-form>
-          <v-text-field v-model="busqueda.texto" label="Search">
-            <template v-slot:append-outer>
-              <v-icon @click="search">search</v-icon>
-            </template>
-          </v-text-field>
-        </v-form>
-      </v-col>
-      <v-col cols="12" sm="2" lg="2">
-        <v-select
-          :items="categorias"
-          v-model="busqueda.categorias"
-          multiple
-          clearable
-          label="Categorías"
-        >
-        </v-select>
-      </v-col>
-      <v-col cols="12" sm="2" lg="2">
-        <v-slider
-          v-model="busqueda.rango"
-          max="5"
-          min="0"
-          thumb-label="always"
-          :thumb-size="24"
-          step="1"
-          ticks
-          label="Valoración"
-        >
-        </v-slider>
-      </v-col>
-    </v-row>
+    <transition appear name="fade">
+      <v-row class="herramientas" justify="center" align="end">
+        <v-col cols="12" sm="4" lg="4">
+          <v-form>
+            <v-text-field v-model="busqueda.texto" label="Search">
+              <template v-slot:append-outer>
+                <v-icon @click="search">search</v-icon>
+              </template>
+            </v-text-field>
+          </v-form>
+        </v-col>
+        <v-col cols="12" sm="2" lg="2">
+          <v-select
+            :items="categorias"
+            v-model="busqueda.categorias"
+            multiple
+            clearable
+            label="Categorías"
+          >
+          </v-select>
+        </v-col>
+        <v-col cols="12" sm="2" lg="2">
+          <v-slider
+            v-model="busqueda.rango"
+            max="5"
+            min="0"
+            thumb-label="always"
+            :thumb-size="24"
+            step="1"
+            ticks
+            label="Valoración"
+          >
+          </v-slider>
+        </v-col>
+      </v-row>
+    </transition>
 
     <!-- PRODUCTOS -->
-    <v-row v-if="products" justify="center">
-      <v-col
-        cols="12"
-        sm="3"
-        md="3"
-        v-for="(product, id) in products"
-        :key="id"
-      >
-        <!-- AQUI IRÄ EL COMPONENTE NUEVO --->
-        <v-card class="producto" @click="showDetail(product)">
-          <v-card-title> {{ product.name }} - {{ product.id }} </v-card-title>
-          <v-card-text>
-            {{ product.valoracion }}
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+    <transition appear name="fade">
+      <v-row v-if="products" justify="center">
+        <v-col
+          cols="12"
+          sm="3"
+          md="3"
+          v-for="(product, id) in products"
+          :key="id"
+        >
+          <!-- AQUI IRÄ EL COMPONENTE NUEVO --->
+          <v-card class="producto" @click="showDetail(product)">
+            <v-card-title> {{ product.name }} - {{ product.id }} </v-card-title>
+            <v-card-text>
+              {{ product.valoracion }}
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </transition>
 
     <!-- DIALOGO CON EL DETALLE -->
     <v-dialog></v-dialog>
@@ -123,5 +127,22 @@ export default {
 .producto:hover {
   transform: translateY(-10px);
   box-shadow: 5px 5px rgba(128, 128, 128, 0.431);
+}
+
+.fade-enter-active {
+  animation: fade-in 0.5s;
+}
+.fade-leave-active {
+  animation: fade-in 0.5s reverse;
+}
+@keyframes fade-in {
+  0% {
+    transform: rotate(0) translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(0) translateX(0px);
+    opacity: 1;
+  }
 }
 </style>
