@@ -21,14 +21,15 @@ NEWSPIDER_MODULE = 'myprotein.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
-# ITEM_PIPELINES = {
-#     'scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500
-# }
+ITEM_PIPELINES = {
+    'scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500
+}
 
-# ELASTICSEARCH_SERVERS = ['elastic']
-# ELASTICSEARCH_INDEX = 'myprotein'
-# ELASTICSEARCH_TYPE = 'items'
-# ELASTICSEARCH_UNIQ_KEY = 'nombreProducto'  # Custom unique key
+ELASTICSEARCH_SERVERS = ['10.56.64.115']
+ELASTICSEARCH_PORT = 9200
+ELASTICSEARCH_INDEX = 'myprotein'
+ELASTICSEARCH_TYPE = 'items'
+ELASTICSEARCH_UNIQ_KEY = 'nombreProducto'  # Custom unique key
 
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)

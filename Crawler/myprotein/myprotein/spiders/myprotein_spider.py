@@ -7,30 +7,22 @@ import os
 import time
 
 
-class MyProteinSpider(scrapy.Spider):
+class MyProteinSpider(CrawlSpider):
     name = "myprotein"
 
-    start_urls = [
-        'https://www.myprotein.es/nutrition/protein/whey-protein.list']
+    allowed_domains = ['myprotein.es']
+    start_urls = ['https://www.myprotein.es/nutrition.list//']
 
-    rules = [
+    rules = (
+        Rule(LinkExtractor(allow=(r'.*\/*.list'), restrict_xpaths='//div[@class="sixItemCategories_container"]')),
+        #Rule(LinkExtractor(allow=(), restrict_xpaths=('//button[@data-direction="next"]')), follow=True),
         Rule(LinkExtractor(allow=(),
                            restrict_xpaths=(
-                               '//a[@class="athenaProductBlock_linkImage"]/@href')
-                           ), callback="parse_item"),
+                               '//div[@class="athenaProductBlock"]')
+                           ), callback="parse_item", follow=True),
+    )
 
-    ]
 
-    # Funcion que itera sobre la URL basica e itera sobre los articulos
-    def parse(self, response):
-        baseUrl = "https://www.myprotein.es/"
-
-        urls = response.xpath(
-            "//a[re:test(@class, 'athenaProductBlock_linkImage')]/@href").extract()
-
-        for f in urls:
-            new_url = baseUrl + f
-            yield scrapy.Request(url=new_url, callback=self.parse_item)
 
     # Funcion que parsea el articulo concreto y lo guarda en un archivo JSON
     def parse_item(self, response):
