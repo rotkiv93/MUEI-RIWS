@@ -35,13 +35,15 @@ class MyProteinSpider(CrawlSpider):
         item["descripcion"] = response.xpath(
             "//p[@class='productName_subtitle' and @data-product-name='subtitle']/text()").extract_first()
         item["numResenas"] = response.xpath(
-            "//p[@class='athenaProductReviews_reviewCount Auto']/text()").extract_first()
+            "//p[@class='athenaProductReviews_reviewCount Auto']/text()").extract_first().split()[0]
         item["stars"] = response.xpath(
-            "//span[@class='athenaProductReviews_aggregateRatingValue']/text()").extract_first()
+            "//span[@class='athenaProductReviews_aggregateRatingValue']/text()").extract_first().split("\n")[1]
         item["tamanoRacion"] = response.xpath(
-            "//div[@id='product-description-content-8']/div/p/text()").extract_first()
+            "//div[@id='product-description-content-8']/div/p/text()").extract_first()[3:]
         item["racionesPorEnvase"] = response.xpath(
-            "//div[@id='product-description-content-8']/div/p[2]/text()").extract_first()
+            "//div[@id='product-description-content-8']/div/p[2]/text()").extract_first()[3:]
+        item["imageUrl"] =  response.xpath(
+            "//div[@class='athenaProductImageCarousel_imageWrapper']/span/@data-path").extract_first().split("/")[6]
 
         ## Informacion nutricional
         table_rows = (response.xpath(

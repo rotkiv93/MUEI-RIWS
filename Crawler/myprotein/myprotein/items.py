@@ -17,6 +17,7 @@ class CrawlerItem(scrapy.Item):
     tamanoRacion = scrapy.Field()
     racionesPorEnvase = scrapy.Field()
     infNutricional = scrapy.Field()
+    imageUrl = scrapy.Field()
 
 
 
