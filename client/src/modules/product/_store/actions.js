@@ -2,21 +2,19 @@ import HTTP from "@/common/http-common";
 import queryParser from "@/common/queryParser";
 
 const getEntities = context => {
-  HTTP.get("?q=age:45")
+  HTTP.get()
     .then(response => {
-      console.log(response);
-      //context.commit("PRODUCTS_FETCHED", response.data.content);
+      context.commit("PRODUCTS_FETCHED", response.data.hits);
     })
     .catch(error => {
       throw error;
     });
 };
 
-const getEntityWithFilter = function(context, filters) {
-  HTTP.get("?q=" + queryParser(filters))
+const getEntitiesWithFilter = function(context, filters) {
+  HTTP.post("", queryParser(filters))
     .then(response => {
-      console.log(response);
-      //context.commit("PRODUCTS_FETCHED", response.data);
+      context.commit("PRODUCTS_FETCHED", response.data.hits);
     })
     .catch(error => {
       throw error;
@@ -25,5 +23,5 @@ const getEntityWithFilter = function(context, filters) {
 
 export default {
   getEntities,
-  getEntityWithFilter
+  getEntitiesWithFilter
 };

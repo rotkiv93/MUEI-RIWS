@@ -11,7 +11,7 @@ import axios from "axios";
  */
 
 const HTTP = axios.create({
-  baseURL: "http://localhost:9200/company/_search"
+  baseURL: "http://localhost:9200/myprotein/_search"
 });
 
 const onUnauthorized = () => {

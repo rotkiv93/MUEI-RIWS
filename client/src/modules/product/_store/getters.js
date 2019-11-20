@@ -1,5 +1,7 @@
-const entities = state => state.entities;
+const hits = state => state.hits;
+const total = state => state.total;
 
 export default {
-  entities
+  hits,
+  total
 };
