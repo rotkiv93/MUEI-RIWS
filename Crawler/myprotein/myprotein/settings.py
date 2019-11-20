@@ -29,7 +29,7 @@ ELASTICSEARCH_SERVERS = ['10.56.64.115']
 ELASTICSEARCH_PORT = 9200
 ELASTICSEARCH_INDEX = 'myprotein'
 ELASTICSEARCH_TYPE = 'items'
-ELASTICSEARCH_UNIQ_KEY = 'nombreProducto'  # Custom unique key
+ELASTICSEARCH_UNIQ_KEY = 'idProduct'  # Custom unique key
 
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)

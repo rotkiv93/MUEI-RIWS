@@ -15,14 +15,11 @@ class MyProteinSpider(CrawlSpider):
 
     rules = (
         Rule(LinkExtractor(allow=(r'.*\/*.list'), restrict_xpaths='//div[@class="sixItemCategories_container"]')),
-        #Rule(LinkExtractor(allow=(), restrict_xpaths=('//button[@data-direction="next"]')), follow=True),
         Rule(LinkExtractor(allow=(),
                            restrict_xpaths=(
                                '//div[@class="athenaProductBlock"]')
                            ), callback="parse_item", follow=True),
     )
-
-
 
     # Funcion que parsea el articulo concreto y lo guarda en un archivo JSON
     def parse_item(self, response):
@@ -30,20 +27,30 @@ class MyProteinSpider(CrawlSpider):
         item["idProduct"] = response.xpath(
             "//div[@class='athenaProductReviews' and @id='athenaProductReviewsComponent']/@data-product-id").extract_first()
         item["nombreProducto"] = response.xpath("//h1[@class='productName_title']/text()").extract_first()
-        item["precio"] = response.xpath(
-            "//span[@class='productPrice_schema' and @data-schema='price']/text()").extract_first()
+        item["precio"] = float(response.xpath(
+            "//span[@class='productPrice_schema' and @data-schema='price']/text()").extract_first())
         item["descripcion"] = response.xpath(
             "//p[@class='productName_subtitle' and @data-product-name='subtitle']/text()").extract_first()
         item["numResenas"] = response.xpath(
-            "//p[@class='athenaProductReviews_reviewCount Auto']/text()").extract_first().split()[0]
+            "//p[@class='athenaProductReviews_reviewCount Auto']/text()").extract_first()
+        if item["numResenas"] is not None:
+            item["numResenas"] = int(item["numResenas"].split()[0])
         item["stars"] = response.xpath(
-            "//span[@class='athenaProductReviews_aggregateRatingValue']/text()").extract_first().split("\n")[1]
+            "//span[@class='athenaProductReviews_aggregateRatingValue']/text()").extract_first()
+        if item["stars"] is not None:
+            item["stars"] = float(item["stars"].split("\n")[1])
         item["tamanoRacion"] = response.xpath(
-            "//div[@id='product-description-content-8']/div/p/text()").extract_first()[3:]
+            "//div[@id='product-description-content-8']/div/p/text()").extract_first()
+        if item["tamanoRacion"] is not None:
+            item["tamanoRacion"] = item["tamanoRacion"][3:]
         item["racionesPorEnvase"] = response.xpath(
-            "//div[@id='product-description-content-8']/div/p[2]/text()").extract_first()[3:]
+            "//div[@id='product-description-content-8']/div/p[2]/text()").extract_first()
+        if item["racionesPorEnvase"] is not None:
+            item["racionesPorEnvase"] = item["racionesPorEnvase"][3:]
         item["imageUrl"] =  response.xpath(
-            "//div[@class='athenaProductImageCarousel_imageWrapper']/span/@data-path").extract_first().split("/")[6]
+            "//div[@class='athenaProductImageCarousel_imageWrapper']/span/@data-path").extract_first()
+        if item["imageUrl"] is not None:
+            item["imageUrl"] = item["imageUrl"].split("/")[6]
 
         ## Informacion nutricional
         table_rows = (response.xpath(
