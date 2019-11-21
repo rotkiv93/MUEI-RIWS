@@ -19,12 +19,13 @@
           </v-col>
           <v-col cols="12" sm="3" lg="3">
             <v-select
-              :items="categoriesDisp"
               v-model="busqueda.categorias"
-              multiple
-              clearable
+              :items="categoriesDisp"
+              attach
+              chips
               @change="search"
               label="Categorías"
+              multiple
             >
             </v-select>
           </v-col>
@@ -110,7 +111,11 @@
             loading-text="Searching... Please wait"
             :headers="tableHeaders"
             hide-default-footer
+            @click:row="prodDetail"
           >
+            <template v-slot:item._source.imageUrl="{ item }">
+              <v-img height="60px" width="80px" :src="getImage(item)"> </v-img>
+            </template>
           </v-data-table>
         </v-col>
       </v-row>
@@ -130,6 +135,11 @@
         </div>
       </v-col>
     </v-row>
+
+    <!-- DIALOGO DEL DETALLE -->
+    <v-dialog width="80%" class="dialogo" v-model="showDialog">
+      <productDialog v-bind:producto="selectedItem"></productDialog>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -137,11 +147,12 @@
 import { mapGetters } from "vuex";
 import store from "../_store";
 import productDetail from "./productDetail";
+import productDialog from "./productDialog";
 const name = "products";
 
 export default {
   name: "productList",
-  components: { productDetail },
+  components: { productDetail, productDialog },
   data() {
     return {
       // FILTROS A APLICAR EN LA BUSQUEDA
@@ -154,7 +165,21 @@ export default {
         from: 0,
         size: 10
       },
-      categoriesDisp: ["Vegetariano", "Vegan"],
+      categoriesDisp: [
+        "Vegetariano",
+        "Vegan",
+        "Low Sugar",
+        "Sin Gluten",
+        "Vitamins",
+        "Myprotein",
+        "Low Fat",
+        "Hard Accessories",
+        "BFS - Myprotein",
+        "Other - Bundle",
+        "Orgánico",
+        "Clothing - Soft Accessories",
+        "Informed Sport"
+      ],
       maxPrice: 200,
       minPrice: 0,
 
@@ -162,6 +187,7 @@ export default {
       viewType: 0,
       loading: true,
       tableHeaders: [
+        { text: "", value: "_source.imageUrl" },
         { text: "Id", value: "_source.idProduct" },
         { text: "Nombre Producto", value: "_source.nombreProducto" },
         { text: "Num Reseñas", value: "_source.numResenas" },
@@ -170,7 +196,6 @@ export default {
         { text: "Categoria", value: "_source.categoria" }
       ],
       // Paginacion
-
       pageSize: 10,
       length: null,
       nextIcon: "navigate_next",
@@ -178,7 +203,11 @@ export default {
       prevIcon: "navigate_before",
       prevIcons: ["mdi-chevron-left", "mdi-arrow-left", "mdi-menu-left"],
       page: 1,
-      totalVisible: 10
+      totalVisible: 10,
+
+      // Dialogo de detalle
+      showDialog: false,
+      selectedItem: null
     };
   },
   computed: {
@@ -222,6 +251,16 @@ export default {
       window.scrollTo({ top: 0, behavior: "smooth" });
       this.busqueda.from = evt == 1 ? 0 : (evt - 1) * this.pageSize;
       this.$store.dispatch(name + "/getEntitiesWithFilter", this.busqueda);
+    },
+    prodDetail(prod) {
+      this.showDialog = true;
+      this.selectedItem = prod;
+    },
+    getImage(prod) {
+      if (prod._source.imageUrl) {
+        return "//s1.thcdn.com/productimg/1600/1600/" + prod._source.imageUrl;
+      }
+      return "https://yt3.ggpht.com/a/AGF-l79djj7d-Ccsf1IXCzfapfRXyZYIhCPmX3e84w=s900-c-k-c0xffffffff-no-rj-mo";
     }
   }
 };

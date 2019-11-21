@@ -19,7 +19,9 @@
               <span>Id:</span>
             </v-col>
             <v-col cols="8" justify-self="start">
-              {{ product._source.idProduct }}
+              <a :href="product._source.itemURL">
+                {{ product._source.idProduct }}
+              </a>
             </v-col>
           </v-row>
 
@@ -44,71 +46,21 @@
     </v-card>
 
     <!-- DIALOGO CON EL DETALLE -->
-    <v-dialog v-model="showDialog">
-      <v-card v-if="product">
-        <v-img
-          class="black--text align-end"
-          height="200px"
-          :src="getImage(product)"
-        >
-          <v-card-title>{{ product._source.nombreProducto }}</v-card-title>
-        </v-img>
-
-        <v-card-text class="text--primary">
-          <v-container flex>
-            <v-row>
-              <v-col cols="4">
-                <span>Id:</span>
-              </v-col>
-              <v-col cols="8" justify-self="start">
-                {{ product._source.idProduct }}
-              </v-col>
-            </v-row>
-
-            <v-divider class="mb-3"></v-divider>
-            <v-row>
-              <v-col cols="4">
-                <span>Reseñas:</span>
-              </v-col>
-              <v-col cols="8" justify-self="start">
-                {{ product._source.numResenas }}
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="4">
-                <span>Precio:</span>
-              </v-col>
-              <v-col cols="8" justify-self="start">
-                {{ product._source.precio }}
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="4">
-                <span>Valoración:</span>
-              </v-col>
-              <v-col cols="8" justify-self="start">
-                {{ product._source.stars }}
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="4">
-                <span>Descripción:</span>
-              </v-col>
-              <v-col cols="8" justify-self="start">
-                {{ product._source.descripcion }}
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-      </v-card>
+    <v-dialog width="80%" v-model="showDialog">
+      <productDialog v-bind:producto="product"></productDialog>
     </v-dialog>
   </v-container>
 </template>
 
 <script>
+import productDialog from "./productDialog";
+
 export default {
-  name: "carDetail",
+  name: "prodDetail",
   props: ["product"],
+  components: {
+    productDialog
+  },
   data() {
     return {
       showDialog: false
