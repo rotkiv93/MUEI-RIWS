@@ -66,7 +66,6 @@ export default function queryParser(filters) {
 
     // Pagination
     query.from(filters.from).size(filters.size);
-    console.log(query.build());
     return query.build();
   }
 }
