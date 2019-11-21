@@ -4,7 +4,7 @@
     <transition appear name="fade">
       <v-container>
         <v-row class="herramientas" justify="center" align="end">
-          <v-col cols="12" sm="5" lg="5">
+          <v-col cols="12" sm="4" lg="4" offset-lg="1" offset-sm="1">
             <v-form>
               <v-text-field
                 v-model="busqueda.texto"

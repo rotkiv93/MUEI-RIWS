@@ -5,12 +5,6 @@
     </VToolbarTitle>
 
     <VSpacer><!-- --></VSpacer>
-
-    <VToolbarItems>
-      <VBtn :to="{ name: 'productList' }" text>
-        Products
-      </VBtn>
-    </VToolbarItems>
   </VAppBar>
 </template>
 

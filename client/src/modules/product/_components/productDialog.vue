@@ -16,7 +16,7 @@
             <span>Id:</span>
           </v-col>
           <v-col cols="8" justify-self="start">
-            <a :href="producto._source.itemURL">
+            <a :href="producto._source.itemURL" target="_blank">
               {{ producto._source.idProduct }}
             </a>
           </v-col>

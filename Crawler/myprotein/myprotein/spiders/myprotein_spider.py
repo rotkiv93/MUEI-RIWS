@@ -15,10 +15,7 @@ class MyProteinSpider(CrawlSpider):
 
     rules = (
         Rule(LinkExtractor(allow=(r'.*\/*.list'), restrict_xpaths='//div[@class="sixItemCategories_container"]')),
-        Rule(LinkExtractor(allow=(),
-                           restrict_xpaths=(
-                               '//div[@class="athenaProductBlock"]')
-                           ), callback="parse_item", follow=True),
+        Rule(LinkExtractor(allow=(), restrict_xpaths=('//div[@class="athenaProductBlock"]')), callback="parse_item", follow=True),
     )
 
     # Funcion que parsea el articulo concreto y lo guarda en un archivo JSON
