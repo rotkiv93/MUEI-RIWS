@@ -1,4 +1,4 @@
-# hello-world
+# myprotein-viewer
 
 ## Project setup
 ```
