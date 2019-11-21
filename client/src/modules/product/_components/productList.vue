@@ -40,6 +40,7 @@
           <v-col cols="12" sm="3" lg="3">
             <v-range-slider
               v-model="busqueda.precio"
+              @change="search"
               :max="maxPrice"
               :min="minPrice"
               :thumb-label="true"
@@ -51,6 +52,7 @@
           <v-col cols="12" sm="3" lg="3">
             <v-slider
               v-model="busqueda.resenas"
+              @change="search"
               max="200"
               min="0"
               :color="colorReseñas"
@@ -65,6 +67,7 @@
           <v-col cols="12" sm="3" lg="3">
             <v-slider
               v-model="busqueda.valoracion"
+              @change="search"
               max="5"
               min="0"
               thumb-label="always"
@@ -96,7 +99,13 @@
       <v-row v-if="hits && viewType == 0">
         <!-- VISTA DE TABLA -->
         <v-col>
-          <v-data-table :items="hits" :headers="tableHeaders"> </v-data-table>
+          <v-data-table
+            :items="hits"
+            :loading="loading"
+            loading-text="Searching... Please wait"
+            :headers="tableHeaders"
+          >
+          </v-data-table>
         </v-col>
       </v-row>
     </transition>
@@ -128,6 +137,7 @@ export default {
 
       // TIPO DE VISTA Y TABLA
       viewType: 0,
+      loading: true,
       tableHeaders: [
         { text: "Id", value: "_source.idProduct" },
         { text: "Nombre Producto", value: "_source.nombreProducto" },
@@ -157,11 +167,15 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch(name + "/getEntities");
+    this.loading = true;
+    this.$store.dispatch(name + "/getEntities").then((this.loading = false));
   },
   methods: {
     search() {
-      this.$store.dispatch(name + "/getEntitiesWithFilter", this.busqueda);
+      this.loading = true;
+      this.$store
+        .dispatch(name + "/getEntitiesWithFilter", this.busqueda)
+        .then((this.loading = false));
     }
   }
 };
