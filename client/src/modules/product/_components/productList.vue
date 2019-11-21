@@ -235,9 +235,9 @@ export default {
       busqueda: {
         texto: "",
         categorias: [],
-        valoracion: null,
-        precio: [0, 0],
-        resenas: null
+        valoracion: 3,
+        precio: [0, 100],
+        resenas: 5
       },
       categorias: [],
       products: [
