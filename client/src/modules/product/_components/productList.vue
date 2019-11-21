@@ -6,7 +6,11 @@
         <v-row class="herramientas" justify="center" align="end">
           <v-col cols="12" sm="5" lg="5">
             <v-form>
-              <v-text-field v-model="busqueda.texto" label="Search">
+              <v-text-field
+                v-model="busqueda.texto"
+                v-on:keydown.enter.prevent="search"
+                label="Search"
+              >
                 <template v-slot:append-outer>
                   <v-icon @click="search">search</v-icon>
                 </template>
@@ -104,11 +108,27 @@
             :loading="loading"
             loading-text="Searching... Please wait"
             :headers="tableHeaders"
+            hide-default-footer
           >
           </v-data-table>
         </v-col>
       </v-row>
     </transition>
+    <v-row justify="center">
+      <v-col>
+        <div class="text-center pt-2">
+          <v-pagination
+            v-model="page"
+            :length="length"
+            :next-icon="nextIcon"
+            :prev-icon="prevIcon"
+            :page="page"
+            :total-visible="totalVisible"
+            @input="goPage($event)"
+          ></v-pagination>
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -129,7 +149,9 @@ export default {
         categorias: [],
         valoracion: 3,
         precio: [0, 100],
-        resenas: 5
+        resenas: 5,
+        from: 0,
+        size: 10
       },
       categoriesDisp: [],
       maxPrice: 200,
@@ -145,7 +167,17 @@ export default {
         { text: "Precio", value: "_source.precio" },
         { text: "Valoracion", value: "_source.stars" },
         { text: "Categoria", value: "_source.categorias" }
-      ]
+      ],
+      // Paginacion
+
+      pageSize: 10,
+      length: null,
+      nextIcon: "navigate_next",
+      nextIcons: ["mdi-chevron-right", "mdi-arrow-right", "mdi-menu-right"],
+      prevIcon: "navigate_before",
+      prevIcons: ["mdi-chevron-left", "mdi-arrow-left", "mdi-menu-left"],
+      page: 1,
+      totalVisible: 10
     };
   },
   computed: {
@@ -168,14 +200,27 @@ export default {
   },
   mounted() {
     this.loading = true;
-    this.$store.dispatch(name + "/getEntities").then((this.loading = false));
+    this.$store
+      .dispatch(name + "/getEntitiesWithFilter", this.busqueda)
+      .then(() => {
+        this.loading = false;
+        this.length = Math.floor(this.total.value / this.pageSize);
+      });
   },
   methods: {
     search() {
       this.loading = true;
       this.$store
         .dispatch(name + "/getEntitiesWithFilter", this.busqueda)
-        .then((this.loading = false));
+        .then(() => {
+          this.loading = false;
+          this.length = Math.floor(this.total.value / this.pageSize);
+        });
+    },
+    goPage(evt) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      this.busqueda.from = evt == 1 ? 0 : (evt - 1) * this.pageSize;
+      this.$store.dispatch(name + "/getEntitiesWithFilter", this.busqueda);
     }
   }
 };

@@ -53,6 +53,8 @@ export default function queryParser(filters) {
       query[element.type](element.function, element.field, element.input);
     });
 
+    // Pagination
+    query.from(filters.from).size(filters.size);
     return query.build();
   }
 }
