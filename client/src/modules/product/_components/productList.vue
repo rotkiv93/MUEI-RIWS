@@ -23,6 +23,7 @@
               v-model="busqueda.categorias"
               multiple
               clearable
+              @change="search"
               label="Categorías"
             >
             </v-select>
@@ -146,14 +147,14 @@ export default {
       // FILTROS A APLICAR EN LA BUSQUEDA
       busqueda: {
         texto: "",
-        categorias: ["Vegetariano", "Vegan"],
+        categorias: [],
         valoracion: 3,
         precio: [0, 100],
         resenas: 5,
         from: 0,
         size: 10
       },
-      categoriesDisp: [],
+      categoriesDisp: ["Vegetariano", "Vegan"],
       maxPrice: 200,
       minPrice: 0,
 
