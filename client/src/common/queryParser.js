@@ -1,51 +1,58 @@
-/*
-search: function() {
-            var body = {
-                    size: 200,
-                    from: 0,
-                    query: {
-                        match: {
-                            name: this.query
-                        }
-                    }
-                }
- */
-const basicQuery = {
-  query: {
-    bool: {
-      must: [
-        {
-          multi_match: {
-            query: "",
-            fields: ["nombreProducto^3", "descripcion"]
-          }
-        },
-        {
-          range: {
-            precio: {
-              gte: 30
-            }
-          }
-        }
-      ]
-    }
-  }
-};
+var bodybuilder = require("bodybuilder");
+let basicQuery = [];
 
 export default function queryParser(filters) {
-  if (filters.texto) {
-    basicQuery.query.multi_match.query = filters.texto;
-  }
-  //   if (filters.resenas) {
-  // }
+  basicQuery = [];
+  if (filters != null) {
+    // Filtro por nombre y descripcion
+    if (filters.texto != null && filters.texto != "") {
+      basicQuery.push({
+        type: "orQuery",
+        function: "match",
+        field: "nombreProducto",
+        input: filters.texto
+      });
+      basicQuery.push({
+        type: "orQuery",
+        function: "match",
+        field: "descripcion",
+        input: filters.texto
+      });
+    }
+    // Filtro por rango de precios
+    if (filters.precio != null) {
+      basicQuery.push({
+        type: "andQuery",
+        function: "range",
+        field: "precio",
+        input: { gte: filters.precio[0], lte: filters.precio[1] }
+      });
+    }
+    // Filtro por valoracion
+    if (filters.valoracion != null) {
+      basicQuery.push({
+        type: "andQuery",
+        function: "range",
+        field: "stars",
+        input: { gte: filters.valoracion, boost: 2 }
+      });
+    }
 
-  //   if (filters.texto) {
-  //   }
-  //   if (filters.valoracion) {
-  //   }
-  //   if (filters.categorias.length != 0) {
-  //   }
-  //   if (filters.precio[0] == 0 && filters.precio[1] == 0) {
-  //   }
-  return basicQuery;
+    // Filtro por numero de reseñas
+    if (filters.resenas != null) {
+      basicQuery.push({
+        type: "andQuery",
+        function: "range",
+        field: "numResenas",
+        input: { gte: filters.resenas }
+      });
+    }
+
+    const query = bodybuilder();
+    basicQuery.forEach(element => {
+      query[element.type](element.function, element.field, element.input);
+    });
+
+    return query.build();
+  }
 }

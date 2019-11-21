@@ -1,109 +1,140 @@
 <template>
-  <v-container>
-    <v-card v-if="entity">
-      <v-card-title class="headline">
-        Car
-        <v-spacer></v-spacer>
-        <v-btn @click="back()">Back</v-btn>
-      </v-card-title>
-      <v-card-text>
-        <v-container>
-          <v-layout> id: {{ entity.id }} </v-layout>
+  <v-container v-if="product">
+    <v-card
+      class="mx-auto producto"
+      @click="showDetail(product)"
+      max-width="400"
+    >
+      <v-img
+        class="black--text align-end"
+        height="200px"
+        :src="getImage(product)"
+      >
+        <v-card-title>{{ product._source.nombreProducto }}</v-card-title>
+      </v-img>
+      <v-card-text class="text--primary">
+        <v-container flex>
+          <v-row>
+            <v-col cols="4">
+              <span>Id:</span>
+            </v-col>
+            <v-col cols="8" justify-self="start">
+              {{ product._source.idProduct }}
+            </v-col>
+          </v-row>
 
-          <v-layout> brand: {{ entity.brand }} </v-layout>
-
-          <v-layout> model: {{ entity.model }} </v-layout>
-
-          <v-layout> color: {{ entity.color }} </v-layout>
-
-          <v-layout> location: {{ entity.location }} </v-layout>
-
-          <v-layout> owner: {{ entity.owner }} </v-layout>
+          <v-divider class="mb-3"></v-divider>
+          <v-row>
+            <v-col cols="12">
+              <span>Reseñas: {{ product._source.numResenas }} </span>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <span>Precio: {{ product._source.precio }}</span>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <span>Valoración: {{ product._source.stars }} </span>
+            </v-col>
+          </v-row>
         </v-container>
       </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn class="yellow darken-3 white--text" @click="edit()">Edit</v-btn>
-        <v-btn class="red white--text" @click="showDeleteDialog">Remove</v-btn>
-      </v-card-actions>
     </v-card>
 
-    <v-dialog v-model="dialog" width="500">
-      <v-card>
-        <v-card-title class="headline darken-1 red white--text">
-          Delete entity
-        </v-card-title>
-        <v-card-text>
-          This action will be permanent
-          <br />
-          Are you sure you want to continue?
+    <!-- DIALOGO CON EL DETALLE -->
+    <v-dialog v-model="showDialog">
+      <v-card v-if="product">
+        <v-img
+          class="black--text align-end"
+          height="200px"
+          :src="getImage(product)"
+        >
+          <v-card-title>{{ product._source.nombreProducto }}</v-card-title>
+        </v-img>
+
+        <v-card-text class="text--primary">
+          <v-container flex>
+            <v-row>
+              <v-col cols="4">
+                <span>Id:</span>
+              </v-col>
+              <v-col cols="8" justify-self="start">
+                {{ product._source.idProduct }}
+              </v-col>
+            </v-row>
+
+            <v-divider class="mb-3"></v-divider>
+            <v-row>
+              <v-col cols="4">
+                <span>Reseñas:</span>
+              </v-col>
+              <v-col cols="8" justify-self="start">
+                {{ product._source.numResenas }}
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="4">
+                <span>Precio:</span>
+              </v-col>
+              <v-col cols="8" justify-self="start">
+                {{ product._source.precio }}
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="4">
+                <span>Valoración:</span>
+              </v-col>
+              <v-col cols="8" justify-self="start">
+                {{ product._source.stars }}
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="4">
+                <span>Descripción:</span>
+              </v-col>
+              <v-col cols="8" justify-self="start">
+                {{ product._source.descripcion }}
+              </v-col>
+            </v-row>
+          </v-container>
         </v-card-text>
-        <v-card-actions>
-          <v-btn @click="dialog = false">
-            Cancel
-          </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn @click="deleteEntity" color="red darken-1 white--text"
-            >Continue <v-icon> delete </v-icon></v-btn
-          >
-        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-container>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import store from "../_store";
-const name = "cars";
-
 export default {
   name: "carDetail",
+  props: ["product"],
   data() {
     return {
-      dialog: false
+      showDialog: false
     };
   },
-  watch: {
-    $route: "mounted"
-  },
-  created() {
-    const STORE_KEY = name;
-    // eslint-disable-next-line no-underscore-dangle
-    if (!(STORE_KEY in this.$store._modules.root._children)) {
-      this.$store.registerModule(STORE_KEY, store);
-    }
-  },
-  mounted() {
-    this.$store.dispatch(name + "/getEntityWithId", this.$route.params.id);
-  },
-  computed: {
-    ...mapGetters(name, {
-      message: "entityWithId"
-    }),
-    entity() {
-      return this.message(this.$route.params.id);
-    }
-  },
   methods: {
-    edit() {
-      this.$router.push({
-        name: "carForm",
-        params: { id: this.entity.id }
-      });
+    showDetail() {
+      this.showDialog = true;
     },
-    back() {
-      this.$router.go(-1);
-    },
-    showDeleteDialog() {
-      this.dialog = true;
-    },
-    deleteEntity() {
-      this.$store.dispatch(name + "/deleteEntity", this.entity.id).then(() => {
-        this.dialog = false;
-        this.$router.push({ name: "carList" });
-      });
+    getImage(prod) {
+      if (prod._source.imageUrl) {
+        return "//s1.thcdn.com/productimg/1600/1600/" + prod._source.imageUrl;
+      }
+      return "https://yt3.ggpht.com/a/AGF-l79djj7d-Ccsf1IXCzfapfRXyZYIhCPmX3e84w=s900-c-k-c0xffffffff-no-rj-mo";
     }
   }
 };
 </script>
+<style scoped>
+.producto {
+  transition: all 0.2s ease-in-out;
+  min-height: 400px;
+}
+
+.producto:hover {
+  transform: translateY(-10px);
+  box-shadow: 5px 5px rgba(128, 128, 128, 0.431);
+}
+</style>
