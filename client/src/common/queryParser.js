@@ -38,7 +38,6 @@ export default function queryParser(filters) {
       });
     }
 
-    // Filtro por numero de reseñas
     if (filters.resenas != null) {
       basicQuery.push({
         type: "andQuery",
@@ -48,6 +47,18 @@ export default function queryParser(filters) {
       });
     }
 
+    if (filters.categorias.length != 0) {
+      filters.categorias.forEach(categoria => {
+        basicQuery.push({
+          type: "andQuery",
+          function: "match",
+          field: "categoria",
+          input: categoria
+        });
+      });
+    }
+
+    // Filtro por numero de reseñas
     const query = bodybuilder();
     basicQuery.forEach(element => {
       query[element.type](element.function, element.field, element.input);
@@ -55,6 +66,7 @@ export default function queryParser(filters) {
 
     // Pagination
     query.from(filters.from).size(filters.size);
+    console.log(query.build());
     return query.build();
   }
 }

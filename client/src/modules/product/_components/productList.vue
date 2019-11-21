@@ -146,7 +146,7 @@ export default {
       // FILTROS A APLICAR EN LA BUSQUEDA
       busqueda: {
         texto: "",
-        categorias: [],
+        categorias: ["Vegetariano", "Vegan"],
         valoracion: 3,
         precio: [0, 100],
         resenas: 5,
@@ -166,7 +166,7 @@ export default {
         { text: "Num Reseñas", value: "_source.numResenas" },
         { text: "Precio", value: "_source.precio" },
         { text: "Valoracion", value: "_source.stars" },
-        { text: "Categoria", value: "_source.categorias" }
+        { text: "Categoria", value: "_source.categoria" }
       ],
       // Paginacion
 
