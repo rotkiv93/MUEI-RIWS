@@ -15,13 +15,24 @@
           </v-col>
           <v-col cols="12" sm="3" lg="3">
             <v-select
-              :items="categorias"
+              :items="categoriesDisp"
               v-model="busqueda.categorias"
               multiple
               clearable
               label="Categorías"
             >
             </v-select>
+          </v-col>
+
+          <v-col cols="12" sm="3" lg="3">
+            <v-btn-toggle v-model="viewType">
+              <v-btn icon>
+                <v-icon>list</v-icon>
+              </v-btn>
+              <v-btn icon>
+                <v-icon>view_carousel</v-icon>
+              </v-btn>
+            </v-btn-toggle>
           </v-col>
         </v-row>
 
@@ -70,7 +81,8 @@
 
     <!-- PRODUCTOS -->
     <transition appear name="fade">
-      <v-row v-if="hits" justify="center">
+      <!-- VISTA DE CARRUSEL --->
+      <v-row v-if="hits && viewType == 1" justify="center">
         <v-col
           cols="12"
           sm="3"
@@ -78,8 +90,13 @@
           v-for="(product, _id) in hits"
           :key="_id"
         >
-          <!-- VISTA DE PRODUCTOS NORMAL --->
           <productDetail v-bind:product="product"></productDetail>
+        </v-col>
+      </v-row>
+      <v-row v-if="hits && viewType == 0">
+        <!-- VISTA DE TABLA -->
+        <v-col>
+          <v-data-table :items="hits" :headers="tableHeaders"> </v-data-table>
         </v-col>
       </v-row>
     </transition>
@@ -97,6 +114,7 @@ export default {
   components: { productDetail },
   data() {
     return {
+      // FILTROS A APLICAR EN LA BUSQUEDA
       busqueda: {
         texto: "",
         categorias: [],
@@ -104,9 +122,20 @@ export default {
         precio: [0, 100],
         resenas: 5
       },
-      categorias: [],
+      categoriesDisp: [],
       maxPrice: 200,
-      minPrice: 0
+      minPrice: 0,
+
+      // TIPO DE VISTA Y TABLA
+      viewType: 0,
+      tableHeaders: [
+        { text: "Id", value: "_source.idProduct" },
+        { text: "Nombre Producto", value: "_source.nombreProducto" },
+        { text: "Num Reseñas", value: "_source.numResenas" },
+        { text: "Precio", value: "_source.precio" },
+        { text: "Valoracion", value: "_source.stars" },
+        { text: "Categoria", value: "_source.categorias" }
+      ]
     };
   },
   computed: {
