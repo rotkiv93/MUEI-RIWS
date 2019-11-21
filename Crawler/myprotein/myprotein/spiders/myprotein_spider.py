@@ -24,33 +24,61 @@ class MyProteinSpider(CrawlSpider):
     # Funcion que parsea el articulo concreto y lo guarda en un archivo JSON
     def parse_item(self, response):
         item = CrawlerItem()
+
         item["idProduct"] = response.xpath(
             "//div[@class='athenaProductReviews' and @id='athenaProductReviewsComponent']/@data-product-id").extract_first()
+        
         item["nombreProducto"] = response.xpath("//h1[@class='productName_title']/text()").extract_first()
+        
+        item["itemURL"] = response.url
+        
         item["precio"] = float(response.xpath(
             "//span[@class='productPrice_schema' and @data-schema='price']/text()").extract_first())
+        
         item["descripcion"] = response.xpath(
             "//p[@class='productName_subtitle' and @data-product-name='subtitle']/text()").extract_first()
-        item["numResenas"] = response.xpath(
+        
+        numResenas = response.xpath(
             "//p[@class='athenaProductReviews_reviewCount Auto']/text()").extract_first()
-        if item["numResenas"] is not None:
-            item["numResenas"] = int(item["numResenas"].split()[0])
-        item["stars"] = response.xpath(
+        if numResenas is not None:
+            numResenas = int(numResenas.split()[0])
+        item["numResenas"] = numResenas
+        
+        stars = response.xpath(
             "//span[@class='athenaProductReviews_aggregateRatingValue']/text()").extract_first()
-        if item["stars"] is not None:
-            item["stars"] = float(item["stars"].split("\n")[1])
-        item["tamanoRacion"] = response.xpath(
+        if stars is not None:
+            stars = float(stars.split("\n")[1])
+        item["stars"] = stars
+        
+        tamanoRacion = response.xpath(
             "//div[@id='product-description-content-8']/div/p/text()").extract_first()
-        if item["tamanoRacion"] is not None:
-            item["tamanoRacion"] = item["tamanoRacion"][3:]
-        item["racionesPorEnvase"] = response.xpath(
+        if tamanoRacion is not None:
+            tamanoRacion = tamanoRacion[3:]
+        item["tamanoRacion"] = tamanoRacion
+        
+        racionesPorEnvase = response.xpath(
             "//div[@id='product-description-content-8']/div/p[2]/text()").extract_first()
-        if item["racionesPorEnvase"] is not None:
-            item["racionesPorEnvase"] = item["racionesPorEnvase"][3:]
-        item["imageUrl"] =  response.xpath(
+        if racionesPorEnvase is not None:
+            racionesPorEnvase = racionesPorEnvase[3:]
+        item["racionesPorEnvase"] = racionesPorEnvase
+        
+        imageUrl =  response.xpath(
             "//div[@class='athenaProductImageCarousel_imageWrapper']/span/@data-path").extract_first()
-        if item["imageUrl"] is not None:
-            item["imageUrl"] = item["imageUrl"].split("/")[6]
+        if imageUrl is not None:
+            imageUrl = imageUrl.split("/")[6]
+        item["imageUrl"] = imageUrl
+
+        # Extraemos la categoría de producto
+        categoria = response.xpath("//div[@data-information-component='Diet']/text()").extract_first()
+        if categoria is not None:
+            categoria = categoria.split("\n")[1].split(",")
+        else:
+            categoria = response.xpath("//div[@data-information-component='range']/text()").extract_first()
+            if categoria is not None:
+                categoria = categoria.split("\n")[1]
+            else:
+                categoria = []
+        item["categoria"] = categoria
 
         ## Informacion nutricional
         table_rows = (response.xpath(
@@ -100,5 +128,3 @@ class MyProteinSpider(CrawlSpider):
         # with open(filename, 'w', encoding='utf8') as f:
         #     json.dump(item, f, ensure_ascii=False)
         # self.log('Saved file %s' % filename)
-
-    

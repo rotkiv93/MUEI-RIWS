@@ -10,6 +10,7 @@ import scrapy
 class CrawlerItem(scrapy.Item):
     idProduct = scrapy.Field() 
     nombreProducto = scrapy.Field()
+    itemURL = scrapy.Field()
     precio = scrapy.Field()
     descripcion = scrapy.Field()
     numResenas = scrapy.Field()
@@ -18,6 +19,8 @@ class CrawlerItem(scrapy.Item):
     racionesPorEnvase = scrapy.Field()
     infNutricional = scrapy.Field()
     imageUrl = scrapy.Field()
+    categoria = scrapy.Field()
+
 
 
 
