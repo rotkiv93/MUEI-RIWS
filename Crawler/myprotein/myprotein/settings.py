@@ -25,7 +25,7 @@ ITEM_PIPELINES = {
     'scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500
 }
 
-ELASTICSEARCH_SERVERS = ['10.56.64.115']
+ELASTICSEARCH_SERVERS = ['localhost']
 ELASTICSEARCH_PORT = 9200
 ELASTICSEARCH_INDEX = 'myprotein'
 ELASTICSEARCH_TYPE = 'items'
