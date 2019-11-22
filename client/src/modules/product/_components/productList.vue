@@ -150,11 +150,11 @@
             <template v-slot:item._source.precio="{ item }">
               <span>{{ item._source.precio }} €</span>
             </template>
-            <template v-slot:item._source.numResenas="{ item }">
+            <template v-slot:item._source.stars="{ item }">
               <v-chip
                 class="white--text"
-                :color="getColor(item._source.numResenas)"
-                >{{ item._source.numResenas }}</v-chip
+                :color="getColor(item._source.stars)"
+                >{{ item._source.stars }}</v-chip
               >
             </template>
           </v-data-table>
@@ -282,9 +282,10 @@ export default {
       total: "total"
     }),
     colorReseñas() {
-      if (this.busqueda.resenas < 50) return "red";
-      if (this.busqueda.resenas < 200) return "orange";
-      return "green";
+      if (this.busqueda.resenas < 10) return "red";
+      if (this.busqueda.resenas < 20) return "orange";
+      if (this.busqueda.resenas < 1000) return "green";
+      return "#45aca5";
     }
   },
   created() {
@@ -329,9 +330,10 @@ export default {
       return "https://yt3.ggpht.com/a/AGF-l79djj7d-Ccsf1IXCzfapfRXyZYIhCPmX3e84w=s900-c-k-c0xffffffff-no-rj-mo";
     },
     getColor(resenas) {
-      if (resenas < 50) return "red";
-      if (resenas < 200) return "orange";
-      return "green";
+      if (resenas < 1.5) return "red";
+      if (resenas < 3) return "orange";
+      if (resenas < 5) return "green";
+      return "#45aca5";
     },
     err(item) {
       item._source.imageUrl = "12079328-1494697640010071.jpg";
