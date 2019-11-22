@@ -18,7 +18,7 @@
             </v-form>
           </v-col>
           <v-col cols="12" sm="3" lg="3">
-            <VSelect
+            <v-select
               v-model="busqueda.categorias"
               :items="categoriesDisp"
               attach
@@ -27,7 +27,7 @@
               label="Categorías"
               multiple
             >
-            </VSelect>
+            </v-select>
           </v-col>
 
           <v-col cols="12" sm="3" lg="3">
@@ -86,12 +86,13 @@
           </v-col>
 
           <v-col cols="12" sm="3" lg="3">
-            <VSelect
+            <v-select
               v-model="busqueda.ordenacion"
               :items="ordenacionesDisp"
               attach
               item-text="id"
               return-object
+              clearable
               @change="search"
               label="Ordenacion"
             >
@@ -101,7 +102,7 @@
                   {{ item.id }}
                 </span>
               </template>
-            </VSelect>
+            </v-select>
           </v-col>
         </v-row>
       </v-container>
@@ -133,7 +134,28 @@
             @click:row="prodDetail"
           >
             <template v-slot:item._source.imageUrl="{ item }">
-              <v-img height="60px" width="80px" :src="getImage(item)"> </v-img>
+              <v-img
+                height="60px"
+                width="80px"
+                :src="getUrlImage(item)"
+                @error="err(item)"
+              >
+              </v-img>
+            </template>
+            <template v-slot:item._source.idProduct="{ item }">
+              <a :href="item._source.itemURL" target="_blank">{{
+                item._source.idProduct
+              }}</a>
+            </template>
+            <template v-slot:item._source.precio="{ item }">
+              <span>{{ item._source.precio }} €</span>
+            </template>
+            <template v-slot:item._source.numResenas="{ item }">
+              <v-chip
+                class="white--text"
+                :color="getColor(item._source.numResenas)"
+                >{{ item._source.numResenas }}</v-chip
+              >
             </template>
           </v-data-table>
         </v-col>
@@ -300,11 +322,19 @@ export default {
       this.showDialog = true;
       this.selectedItem = prod;
     },
-    getImage(prod) {
+    getUrlImage(prod) {
       if (prod._source.imageUrl) {
         return "//s1.thcdn.com/productimg/1600/1600/" + prod._source.imageUrl;
       }
       return "https://yt3.ggpht.com/a/AGF-l79djj7d-Ccsf1IXCzfapfRXyZYIhCPmX3e84w=s900-c-k-c0xffffffff-no-rj-mo";
+    },
+    getColor(resenas) {
+      if (resenas < 50) return "red";
+      if (resenas < 200) return "orange";
+      return "green";
+    },
+    err(item) {
+      item._source.imageUrl = "12079328-1494697640010071.jpg";
     }
   }
 };
