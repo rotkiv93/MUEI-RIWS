@@ -10,7 +10,9 @@
         height="200px"
         :src="getImage(product)"
       >
-        <v-card-title>{{ product._source.nombreProducto }}</v-card-title>
+        <v-card-title class="titulo">{{
+          product._source.nombreProducto
+        }}</v-card-title>
       </v-img>
       <v-card-text class="text--primary">
         <v-container flex>
@@ -88,5 +90,10 @@ export default {
 .producto:hover {
   transform: translateY(-10px);
   box-shadow: 5px 5px rgba(128, 128, 128, 0.431);
+}
+
+.titulo {
+  text-shadow: -1px 0 rgba(0, 0, 0, 0.561), 0 1px white, 1px 0 white,
+    0 -1px white;
 }
 </style>
