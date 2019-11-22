@@ -36,7 +36,7 @@
             <span>Precio:</span>
           </v-col>
           <v-col cols="8" justify-self="start">
-            {{ producto._source.precio }}
+            {{ producto._source.precio }} €
           </v-col>
         </v-row>
         <v-row>
@@ -55,6 +55,33 @@
             {{ producto._source.descripcion }}
           </v-col>
         </v-row>
+        <v-row>
+          <v-col cols="4" v-if="producto._source.tamanoRacion">
+            <span>Tamaño de ración:</span>
+          </v-col>
+          <v-col cols="8" justify-self="center">
+            {{ producto._source.tamanoRacion }}
+          </v-col>
+        </v-row>
+        <v-row v-if="producto._source.racionesPorEnvase">
+          <v-col cols="4">
+            <span>Raciones por envase:</span>
+          </v-col>
+          <v-col cols="8" justify-self="center">
+            {{ producto._source.racionesPorEnvase }}
+          </v-col>
+        </v-row>
+        <v-row v-if="producto._source.infNutricional.length != 0">
+          <v-col cols="12">
+            <v-data-table
+              :items="filtered_product"
+              :headers="tableHeaders"
+              :items-per-page="100"
+              hide-default-footer
+            >
+            </v-data-table>
+          </v-col>
+        </v-row>
       </v-container>
     </v-card-text>
   </v-card>
@@ -64,7 +91,20 @@
 export default {
   props: ["producto"],
   data() {
-    return {};
+    return {
+      tableHeaders: [
+        { text: "", value: "title", sortable: false },
+        { text: "Valor", value: "value" },
+        { text: "Porcentaje", value: "percentage" }
+      ]
+    };
+  },
+  computed: {
+    filtered_product() {
+      return this.producto._source.infNutricional.filter(element => {
+        if (element.title != "None") return element;
+      });
+    }
   },
   methods: {
     getImage(prod) {

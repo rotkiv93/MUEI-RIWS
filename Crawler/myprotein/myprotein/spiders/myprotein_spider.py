@@ -29,8 +29,10 @@ class MyProteinSpider(CrawlSpider):
         
         item["itemURL"] = response.url
         
-        item["precio"] = float(response.xpath(
-            "//span[@class='productPrice_schema' and @data-schema='price']/text()").extract_first())
+        try:
+            item["precio"] = float(response.xpath("//span[@class='productPrice_schema' and @data-schema='price']/text()").extract_first())
+        except:
+            item["price"] = None
         
         item["descripcion"] = response.xpath(
             "//p[@class='productName_subtitle' and @data-product-name='subtitle']/text()").extract_first()
@@ -47,17 +49,17 @@ class MyProteinSpider(CrawlSpider):
             stars = float(stars.split("\n")[1])
         item["stars"] = stars
         
-        tamanoRacion = response.xpath(
-            "//div[@id='product-description-content-8']/div/p/text()").extract_first()
-        if tamanoRacion is not None:
-            tamanoRacion = tamanoRacion[3:]
-        item["tamanoRacion"] = tamanoRacion
+        tamanoRacion = response.xpath("//div[@class='productDescription_synopsisContent']//p[@align='center']/text()").extract_first()
+        try: 
+            item["tamanoRacion"] = tamanoRacion[3:]
+        except:
+            item["tamanoRacion"] = None
         
-        racionesPorEnvase = response.xpath(
-            "//div[@id='product-description-content-8']/div/p[2]/text()").extract_first()
-        if racionesPorEnvase is not None:
-            racionesPorEnvase = racionesPorEnvase[3:]
-        item["racionesPorEnvase"] = racionesPorEnvase
+        racionesPorEnvase = response.xpath("//div[@class='productDescription_synopsisContent']//p[@align='center']/text()").extract()
+        try:
+            item["racionesPorEnvase"] = racionesPorEnvase[1][3:]
+        except:
+            item["racionesPorEnvase"] = None
         
         imageUrl =  response.xpath(
             "//div[@class='athenaProductImageCarousel_imageWrapper']/span/@data-path").extract_first()
