@@ -18,7 +18,7 @@
             </v-form>
           </v-col>
           <v-col cols="12" sm="3" lg="3">
-            <v-select
+            <VSelect
               v-model="busqueda.categorias"
               :items="categoriesDisp"
               attach
@@ -27,7 +27,7 @@
               label="Categorías"
               multiple
             >
-            </v-select>
+            </VSelect>
           </v-col>
 
           <v-col cols="12" sm="3" lg="3">
@@ -83,6 +83,25 @@
               label="Valoración"
             >
             </v-slider>
+          </v-col>
+
+          <v-col cols="12" sm="3" lg="3">
+            <VSelect
+              v-model="busqueda.ordenacion"
+              :items="ordenacionesDisp"
+              attach
+              item-text="id"
+              return-object
+              @change="search"
+              label="Ordenacion"
+            >
+              <template v-slot:item="{ item }">
+                <span>
+                  <v-icon>{{ item.icon }}</v-icon>
+                  {{ item.id }}
+                </span>
+              </template>
+            </VSelect>
           </v-col>
         </v-row>
       </v-container>
@@ -163,7 +182,8 @@ export default {
         precio: [0, 100],
         resenas: 5,
         from: 0,
-        size: 10
+        size: 10,
+        ordenacion: null
       },
       categoriesDisp: [
         "Vegetariano",
@@ -179,6 +199,30 @@ export default {
         "Orgánico",
         "Clothing - Soft Accessories",
         "Informed Sport"
+      ],
+      ordenacionesDisp: [
+        {
+          id: "Numero Reseñas",
+          icon: "arrow_upward",
+          value: { numResenas: "asc" }
+        },
+        {
+          id: "Numero Reseñas",
+          icon: "arrow_downward",
+          value: { numResenas: "desc" }
+        },
+        { id: "Precio", icon: "arrow_upward", value: { precio: "asc" } },
+        {
+          id: "Precio",
+          icon: "arrow_downward",
+          value: { precio: "desc" }
+        },
+        {
+          id: "Valoracion",
+          icon: "arrow_upward",
+          value: { stars: "asc" }
+        },
+        { id: "Valoracion", icon: "arrow_downward", value: { stars: "desc" } }
       ],
       maxPrice: 200,
       minPrice: 0,
