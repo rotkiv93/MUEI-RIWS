@@ -1,6 +1,6 @@
 MUEI-RIWS
 
-Práctica de recuperación de la información de la asignatura "Recuperación de la Información y Web Semántica" del Máster Universitario en Ingeniería Informática.
+Práctica de recuperación de la información de la asignatura "Recuperación de la Información y Web Semántica" del Máster Universitario en Ingeniería Informática, año 2019.
 
 Este repositorio contiene el código de tres partes de un proyecto de recuperación de la información que toma datos de productos de la web myprotein.es y los muestra en un interfaz web ofreciendo posibilidad de realizar búsquedas y filtrar por distintos filtros.
 
